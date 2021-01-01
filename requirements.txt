@@ -1,0 +1,9 @@
+numpy
+Pillow
+Airtest
+pytesseract
+jupyterlab
+uiautomator2
+imutils
+findit
+scikit-image
