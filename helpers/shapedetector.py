@@ -4,11 +4,11 @@ class ShapeDetector:
     def __init__(self):
         pass
     
-    def detect(self, c):
+    def detect(self, c, tol=0.04):
         # initialize the shape name and approximate the contour
         shape = "unidentified"
         peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.05 * peri, True)
+        approx = cv2.approxPolyDP(c, tol * peri, True)
         # if the shape is a triangle, it will have 3 vertices
         if len(approx) == 3:
             shape = "triangle"
@@ -29,4 +29,4 @@ class ShapeDetector:
         else:
             shape = "circle"
         # return the name of the shape
-        return shape
+        return shape, approx
