@@ -7,3 +7,6 @@ uiautomator2
 imutils
 findit
 scikit-image
+pyyaml
+git+https://github.com/r-luo/ocrspace.git
+pandas

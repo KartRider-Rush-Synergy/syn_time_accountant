@@ -130,3 +130,8 @@ dmypy.json
 
 # Others
 .DS_Store
+config/baiduapi.yml
+config/ocrspaceapi.yml
+
+# pycharm
+.idea/
