@@ -6,8 +6,9 @@ import time
 
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-            
-def verify_page(words, ocrr, nmatch=0): 
+
+
+def verify_page(words, ocrr, nmatch=0):
         """
         
         Parameters
@@ -16,7 +17,8 @@ def verify_page(words, ocrr, nmatch=0):
             words that identifies a page
         ocrr: OCRResults
             output from screenshot_ocr function
-        
+        nmatch: int
+            minimum number of matched words to confirm page
         Returns
         -------
         bool
@@ -72,6 +74,8 @@ def parse_member_names(member_name_words):
     
 
 def sort_words(word_list, direction='h'):
+    if direction not in ('h', 'v'):
+        raise ValueError("direction has to be one of ('h', 'v')")
     if direction == 'v':
         gt = 'bottom_of'
     if direction == 'h':
