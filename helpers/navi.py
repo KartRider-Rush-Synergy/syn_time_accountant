@@ -2,6 +2,7 @@ import numpy as np
 import re
 from .utils import istime
 import logging
+import time
 
 LOG = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -67,7 +68,7 @@ def parse_member_names(member_name_words):
             cur_word.text = cur_word.text[1:]
         member_names.append(cur_word)
 
-    return member_names
+    return sort_words(member_names, direction='v')
     
 
 def sort_words(word_list, direction='h'):
@@ -357,9 +358,10 @@ class ClubMembersPage(Page):
     def scroll(self, direction='down', duration=0.2):
         if self.members is None:
             self.get_member_names()
-            
-        top = None
-        bottom = None
+
+        if len(self.members) == 0:
+            return None
+
         top_loc = float('inf')
         bottom_loc = 0
         for member in self.members:
@@ -374,18 +376,19 @@ class ClubMembersPage(Page):
             self.ocrr.drag(loc1=lower_loc, loc2=upper_loc, duration=duration)
         if direction == "up":
             self.ocrr.drag(loc1=upper_loc, loc2=lower_loc, duration=duration)
-    
+
+    def click_member(self, member):
+        if member not in self.members:
+            raise KeyError(f'member {member} is not in self.members')
+
+        self.ocrr.click(member)
+
     def add_friend(self, member):
         if not self.ocrr.word_exists('Status'):
             raise KeyError('Word "Status" not found')
-        if member not in self.members:
-            raise KeyError(f'member {member} is not in self.members')
-        
-        self.ocrr.click(member)
-        
-        time.sleep(2)
         vertical_align = self.ocrr.get_word("Status")[0].left - 50
         self.ocrr.click(loc=[vertical_align, member.center[1]])
+        return
         
     def exit(self):
         self.ocrr.click(loc=[50, 10])
@@ -402,6 +405,17 @@ class AddFriendPage(Page):
         self.ocrr.click('OK')
 
 
+class ChatPage(Page):
+    def __init__(self, ocrr):
+        super().__init__(name='ChatPage', ocrr=ocrr)
+
+    def verify(self):
+        return verify_page(['Private', 'Chat', 'Send'], self.ocrr)
+
+    def exit(self):
+        self.ocrr.click(loc=[-100, 100])
+
+
 PAGES = [
     StartPage,
     WelcomePage,
@@ -415,6 +429,7 @@ PAGES = [
     ClubHomePage,
     ClubMembersPage,
     AddFriendPage,
+    ChatPage
 ]
 
 
