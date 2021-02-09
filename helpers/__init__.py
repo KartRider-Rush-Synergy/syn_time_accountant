@@ -4,3 +4,4 @@ from . import utils
 from . import navi
 from . import ocrspace
 from . import ocrprocessing
+from . import pyav
